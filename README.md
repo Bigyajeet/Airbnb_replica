@@ -1,5 +1,5 @@
-# Airbnb_replica
-# Airbnb Replica using MERN and Bootstrap
+
+# Airbnb Replica using MERN currently working on it
 
 This project is a full-stack web application that aims to replicate the core functionalities and user experience of Airbnb. It allows users to browse listings for accommodations, view detailed information, and potentially book stays (booking functionality might be a future enhancement).
 
