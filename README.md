@@ -164,27 +164,49 @@ If you want to run this project locally, follow these steps:
 ## Project Structure
 
 **├── backend/          # Backend code (Node.js, Express.js)**
+
 **│   ├── models/       # MongoDB schema definitions**
+
 **│   ├── routes/       # API routes**
+
 **│   ├── controllers/  # Route handler logic**
+
 **│   ├── config/       # Configuration files (e.g., database connection)**
+
 **│   ├── server.js     # Main backend entry point**
+
 **│   ├── package.json**
+
 **│   └── ...**
+
 **├── frontend/         # Frontend code (React.js, Bootstrap)**
+
 **│   ├── public/       # Static assets**
-**│   ├── src/          # React components, styles, etc.**
-**│   │   ├── components/**
-**│   │   ├── pages/
-**│   │   ├── App.js      # Main application component**
-**│   │   ├── index.js    # Frontend entry point**
-**│   │   ├── styles/     # Custom CSS or Sass files**
-**│   │   └── ...
-**│   ├── package.json**
-**│   └── ...**
-**├── README.md         # Project description and details**
-**├── .gitignore        # Specifies intentionally untracked files that Git should ignore**
-**└── ...**
+
+**│  ├── src/          # React components, styles, etc.**
+
+**│  │   ├── components/**
+
+**│  │   ├── pages/
+
+**│  │   ├── App.js      # Main application component**
+
+**│  │   ├── index.js    # Frontend entry point**
+
+**│  │   ├── styles/     # Custom CSS or Sass files**
+
+**│  │   └── ...
+
+**│  ├── package.json**
+
+**│  └── ...**
+
+**├──| README.md **        # Project description and details
+
+**├──|.gitignore        # Specifies intentionally untracked files that Git should ignore**
+
+**└──| ...**
+
 
 ## Contributing
 
