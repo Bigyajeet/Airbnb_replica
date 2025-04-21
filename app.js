@@ -5,6 +5,7 @@ const Listing=require("./models/listing.js");
 const path=require("path");
 const methodOverride=require("method-override");
 const ejsMate=require("ejs-mate");// helps to create layout
+const wrapAsync=require("./utils/wrapAsync.js");
 
 const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
       
@@ -54,17 +55,14 @@ app.get("/listings/:id",async(req,res)=>{
 });
 
 //create route
-app.post("/listings",async(err,req,res,next)=>{
+app.post("/listings",wrapAsync(async(err,req,res,next)=>{
     // let {title,description,image,price,country,location}=req.body;
-    try{
+   
     let newListing=new Listing(req.body.listing);
     await newListing.save();
      res.redirect("/listings");
-    }catch(err){
-        next(err);
     }
-   
-});
+));
 
 //Edit route
 app.get("/listings/:id/edit",async(req,res)=>{
