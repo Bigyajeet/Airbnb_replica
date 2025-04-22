@@ -59,11 +59,11 @@ app.get("/listings/:id",wrapAsync(async(req,res)=>{
 //create route
 app.post("/listings",wrapAsync(async(err,req,res,next)=>{
     // let {title,description,image,price,country,location}=req.body;
-    if(!req.body.listing){
+    if(!req.body.listings){
         throw new ExpressError(400,"bad request")
     }
    
-    let newListing=new Listing(req.body.listing);
+    let newListing=new Listing(req.body.listings);
     await newListing.save();
      res.redirect("/listings");
     }
@@ -118,7 +118,8 @@ app.delete("/listings/:id",wrapAsync(async(req,res)=>{
 app.use((err,req,res,next)=>{
     let {statusCode=500,message="something went wrong"}=err;
     // res.send("Something went wrong!");
-    res.status(statusCode).send(message);
+    // res.status(statusCode).send(message);
+    res.status(statusCode).render("error.ejs",{message});
     
 });
 
