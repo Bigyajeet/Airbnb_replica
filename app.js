@@ -36,7 +36,18 @@ app.use(express.static(path.join(__dirname,"/public")));
 //api started
 app.get("/",(req,res)=>{
     res.send("Hi, I am root");
-})
+});
+
+//middleware validate using joi
+const validateListing=(req,res,next)=>{
+    let {error}=listingSchema.validate(req.body);
+    if(error){
+        let errMsg=error.details.map((el)=>el.message).join(",");
+        throw new ExpressError(400,errMsg);
+    }else{
+        next()
+    }
+};
 
 //index route
 app.get("/listings",wrapAsync(async(req,res)=>{
@@ -58,19 +69,17 @@ app.get("/listings/:id",wrapAsync(async(req,res)=>{
 }));
 
 //create route
-app.post("/listings",wrapAsync(async(err,req,res,next)=>{
+app.post("/listings", validateListing,wrapAsync(async(err,req,res,next)=>{
     // let {title,description,image,price,country,location}=req.body;
     // if(!req.body.listing){
     //     throw new ExpressError(400,"bad request")
     // }
     //adding of joi
-    let result=listingSchema.validate(req.body);
-    console.log(result);
-    if(result.error){
-        throw new ExpressError(400,result.error);//joi sends error 
-    }
-   
-    const newListing=new Listing(req.body.listing);
+    // let result=listingSchema.validate(req.body);
+    // console.log(result);
+    // if(result.error){
+    //     throw new ExpressError(400,result.error);//joi sends error 
+    // }
     // if(!newListing.title){
     //     throw new ExpressError(400,"title is missing")
 
@@ -83,6 +92,8 @@ app.post("/listings",wrapAsync(async(err,req,res,next)=>{
     //     throw new ExpressError(400,"location is missing")
 
     // } instead of these if condition we use joi tool for validation 
+
+    
     await newListing.save();
      res.redirect("/listings");
     }
@@ -97,7 +108,7 @@ app.get("/listings/:id/edit",wrapAsync(async(req,res)=>{
 }));
 
 //update route
-app.put("/listing/:id",wrapAsync(async(req,res)=>{
+app.put("/listing/:id", validateListing,wrapAsync(async(req,res)=>{
     if(!req.body.listing){
         throw new ExpressError(400,"bad request")
     }
