@@ -7,6 +7,7 @@ const methodOverride=require("method-override");
 const ejsMate=require("ejs-mate");// helps to create layout
 const wrapAsync=require("./utils/wrapAsync.js");
 const ExpressError =require("./utils/ExpressError.js");
+const {listingSchema}=require("./schema.js");
 
 
 const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
@@ -59,11 +60,29 @@ app.get("/listings/:id",wrapAsync(async(req,res)=>{
 //create route
 app.post("/listings",wrapAsync(async(err,req,res,next)=>{
     // let {title,description,image,price,country,location}=req.body;
-    if(!req.body.listings){
-        throw new ExpressError(400,"bad request")
+    // if(!req.body.listing){
+    //     throw new ExpressError(400,"bad request")
+    // }
+    //adding of joi
+    let result=listingSchema.validate(req.body);
+    console.log(result);
+    if(result.error){
+        throw new ExpressError(400,result.error);//joi sends error 
     }
    
-    let newListing=new Listing(req.body.listings);
+    const newListing=new Listing(req.body.listing);
+    // if(!newListing.title){
+    //     throw new ExpressError(400,"title is missing")
+
+    // }
+    // if(!newListing.description){
+    //     throw new ExpressError(400,"description is missing")
+
+    // }
+    // if(!newListing.location){
+    //     throw new ExpressError(400,"location is missing")
+
+    // } instead of these if condition we use joi tool for validation 
     await newListing.save();
      res.redirect("/listings");
     }
@@ -122,6 +141,7 @@ app.use((err,req,res,next)=>{
     res.status(statusCode).render("error.ejs",{message});
     
 });
+
 
 
 
