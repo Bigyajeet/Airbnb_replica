@@ -3,24 +3,54 @@ const app=express();
 const users=require("./routes/users.js");
 const posts=require("./routes/post.js")
 const session=require("express-session");
+const path=require("path");
+const flash=require("connect-flash");
 //session
-app.use(session({
+// app.use(session({
+//     secret:"my name is bigyajeet",
+//     resave:false,
+//     saveUninitialized:true,
+// })
+// );
+// app.get("/reqcount",(req,res)=>{
+//     if(req.session.count){
+//         req.session.count++;
+//     }else{
+//         req.session.count=1;
+//     }
+//     res.send(`You sent a request ${req.session.count} times`)
+// });
+
+// app.get("/test",(req,res)=>{
+//     res.send("connection successful")
+// });
+
+
+//storing and using session
+
+app.set("view engine","ejs");
+app.set("views",path.join(__dirname,"views"));
+
+const sessionOptions={
     secret:"my name is bigyajeet",
     resave:false,
     saveUninitialized:true,
-})
-);
-app.get("/reqcount",(req,res)=>{
-    if(req.session.count){
-        req.session.count++;
-    }else{
-        req.session.count=1;
-    }
-    res.send(`You sent a request ${req.session.count} times`)
+};
+
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.get("/register",(req,res)=>{
+    let {name="anonymous kiqueen"}=req.query;
+    req.session.name=name;
+    req.flash("success","user registered successfully");
+    // res.send(name);
+    res.redirect("/hello")
 });
 
-app.get("/test",(req,res)=>{
-    res.send("connection successful")
+app.get("/hello",(req,res)=>{
+    // res.send(`hello,${req.session.name}`);
+    res.render("pages.ejs",{name:req.session.name,msg:req.flash("success")});
 });
 
 
