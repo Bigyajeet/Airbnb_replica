@@ -12,6 +12,7 @@ const Review=require("./models/review.js");
 const routes=require("./routes/listing.js");
 const reviews=require("./routes/review.js");
 const session=require("express-session");
+const flash=require("connect-flash");
 
 
 const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
@@ -50,13 +51,22 @@ const sessionOption={
         httpOnly:true,
     },
 };
-//session for use
-app.use(session(sessionOption))
 
 //api started
 app.get("/",(req,res)=>{
     res.send("Hi, I am root");
 });
+
+
+//session for use
+app.use(session(sessionOption));
+//connect-flash used
+app.use(flash());
+
+app.use((req,res,next)=>{
+    res.locals.success=req.flash("success");
+    next();
+})
 
 
 

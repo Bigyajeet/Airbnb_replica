@@ -24,6 +24,7 @@ const validateListing=(req,res,next)=>{
 //index route
 router.get("/",wrapAsync(async(req,res)=>{
    const allListing= await Listing.find({});
+   req.flash("success","new listing created!");
    res.render("listings/index.ejs",{allListing});
     
 
