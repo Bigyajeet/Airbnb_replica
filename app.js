@@ -9,12 +9,15 @@ const wrapAsync=require("./utils/wrapAsync.js");
 const ExpressError =require("./utils/ExpressError.js");
 const {listingSchema,reviewSchema}=require("./schema.js");
 const Review=require("./models/review.js");
-const routes=require("./routes/listing.js");
-const reviews=require("./routes/review.js");
+const listingrouter=require("./routes/listing.js");
+const reviewrouter=require("./routes/review.js");
+const userrouter=require("./routes/user.js");
 const session=require("express-session");
 const flash=require("connect-flash");
 const passport=require("passport");
-const localStrategy=require("./models/user.js");
+const LocalStrategy=require("passport-local")
+const User=require("./models/user.js");
+const passportLocalMongoose=require("passport-local-mongoose");
 
 
 const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
@@ -80,20 +83,33 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req,res,next)=>{
     res.locals.success=req.flash("success");
     res.locals.error=req.flash("error");
+    res.locals.currUser=req.user;
     // console.log(res.locals.success)
     next();
 });
+
+//passport,salt,hash used checked
+// app.get('/demouser',async(req,res)=>{
+//     let fakeUser=new User({
+//         email:"student@gmail.com",
+//         username:"delta-student"
+//     });
+//     let registeredUser=await User.register(fakeUser,"helloworld");
+//     res.send(registeredUser);
+// });
+
 
 
 
 
 
 //resstructering listing
-app.use("/listings",routes);
+app.use("/listings",listingrouter);
 
 
 //restructuring review
-app.use("/listings/:id/reviews",reviews);
+app.use("/listings/:id/reviews",reviewrouter);
+app.use("/",userrouter);
 
 //testing
 // app.get("/testListing",async(req,res)=>{
