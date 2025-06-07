@@ -80,6 +80,7 @@ router.post("/",isLoggedIn,validateListing,wrapAsync(async(req,res,next)=>{
 
     const newListing= new Listing(req.body.listing);
     newListing.owner=req.user._id;
+    console.log(user);
     await newListing.save();
     req.flash("success","New listing Created!")
      res.redirect("/listings");
