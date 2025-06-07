@@ -1,13 +1,9 @@
 const express=require("express");
 const app=express();
 const mongoose=require("mongoose");
-const Listing=require("./models/listing.js");
 const path=require("path");
 const methodOverride=require("method-override");
 const ejsMate=require("ejs-mate");// helps to create layout
-const wrapAsync=require("./utils/wrapAsync.js");
-const ExpressError =require("./utils/ExpressError.js");
-const {listingSchema,reviewSchema}=require("./schema.js");
 const Review=require("./models/review.js");
 const listingrouter=require("./routes/listing.js");
 const reviewrouter=require("./routes/review.js");
