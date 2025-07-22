@@ -10,12 +10,13 @@ const listingSchema=new Schema({
     description:String,
     image:{
        
-        type:String,
-        // required:true,
-        default:"shubham-dhage-fMCHQ2uUzrk-unsplash.jpg",
-        set:(v)=>v===""?"shubham-dhage-fMCHQ2uUzrk-unsplash.jpg":v,
+        url:String,
+        filename:String,
     },
-    price:Number,
+    price:{
+        type:Number,
+    required:true,
+    },
     location:String,
     country:String,
     reviews:[

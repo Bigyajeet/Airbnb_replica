@@ -1,3 +1,8 @@
+if(process.env.NODE_ENV!="production"){
+    require('dotenv').config()
+}
+
+
 const express=require("express");
 const app=express();
 const mongoose=require("mongoose");
@@ -9,6 +14,7 @@ const listingrouter=require("./routes/listing.js");
 const reviewrouter=require("./routes/review.js");
 const userrouter=require("./routes/user.js");
 const session=require("express-session");
+const MongoStore=require('connect-mongo');
 const flash=require("connect-flash");
 const passport=require("passport");
 const LocalStrategy=require("passport-local")
@@ -16,7 +22,8 @@ const User=require("./models/user.js");
 const passportLocalMongoose=require("passport-local-mongoose");
 
 
-const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
+// const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
+const dburl=process.env.ALTASDB_URL;
       
 main().then(()=>{
     console.log("connected to Db");
@@ -25,7 +32,7 @@ main().then(()=>{
 });
 
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(dburl);
 
   
 }
@@ -39,11 +46,25 @@ app.use(methodOverride("_method"));
 app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
+//for mongo-connect
+
+const store=MongoStore.create({
+    mongoUrl:dburl,
+    crypto:{                   //for encryption
+        secret:process.env.SECRET,
+    },
+    touchAfter:24*3600,  //for update in sec
+
+});
+store.on("error",()=>{
+    console.log("error in Mongo-session store error",err);
+});
 
 //for express-session
 
 const sessionOption={
-    secret:"mysecretcode",
+    store,
+    secret:process.env.SECRET                                ,
     resave:false,
     saveUninitialized:true,
     cookie:{
@@ -53,10 +74,11 @@ const sessionOption={
     },
 };
 
+
 //api started
-app.get("/",(req,res)=>{
-    res.send("Hi, I am root");
-});
+// app.get("/",(req,res)=>{
+//     res.send("Hi, I am root");
+// });home removed
 
 
 //session for use
@@ -80,6 +102,7 @@ app.use((req,res,next)=>{
     res.locals.success=req.flash("success");
     res.locals.error=req.flash("error");
     res.locals.currUser=req.user;
+     
     // console.log(res.locals.success)
     next();
 });

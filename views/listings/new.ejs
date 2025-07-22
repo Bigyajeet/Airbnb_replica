@@ -50,6 +50,7 @@
             <input name="listing[image]" 
             type="file"
             class="form-control"
+            required
             >
             
 
@@ -58,11 +59,13 @@
 
 <div class="row">
         <div class="mb-3 col-md-4">
-            <label for="Price" class="form-label"> Price</label>
+            <label for="price" class="form-label"> Price</label>
             <input name="listing[price]"
              placeholder="1200"
+             type="number"
             
               class="form-control"
+
               required>
               <div class="invalid-feedback">Price should be valid
             
@@ -72,9 +75,9 @@
 
 
        <div class="mb-3 col-md-4">
-        <label for="Country" class="form-label"> Country</label>
-        <input name="listing[Country]"
-         placeholder="Country"
+        <label for="country" class="form-label"> Country</label>
+        <input name="listing[country]"
+         placeholder="country"
          type="text"
          class="form-control"
          required

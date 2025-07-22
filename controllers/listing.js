@@ -1,4 +1,5 @@
 const Listing=require("../models/listing.js");
+const user=require("../models/user.js");
 
 
 
@@ -21,12 +22,13 @@ module.exports.showListing=async(req,res)=>{
         path:"reviews",
         populate:{
             path:"author",
+            model:'User'
         },
     })
     .populate('owner');
     if(!listing){
         req.flash("error","listing you requested for does not exist!");
-        res.redirect("/listings");
+       return res.redirect("/listings");
     }
     console.log(listing);
     res.render("listings/show.ejs",{ listing });
@@ -55,10 +57,11 @@ module.exports.createListing=async(req,res,next)=>{
     //     throw new ExpressError(400,"location is missing")
 
     // } instead of these if condition we use joi tool for validation 
-
+    let url=req.file.path;
+    let filename=req.file.filename;
     const newListing= new Listing(req.body.listing);
     newListing.owner=req.user._id;
-    console.log(user);
+    newListing.image={url,filename};
     await newListing.save();
     req.flash("success","New listing Created!")
      res.redirect("/listings");
@@ -71,7 +74,11 @@ module.exports.createListing=async(req,res,next)=>{
             req.flash("error","listing you requested for does not exist!");
             res.redirect("/listings");
         }
-        res.render("listings/edit.ejs",{listing});
+        
+
+        let OriginalImageUrl=listing.image.url;
+       OriginalImageUrl= OriginalImageUrl.replace('/upload','/upload/h_200,w_250')
+       res.render("listings/edit.ejs",{listing,OriginalImageUrl});
     
     }
 
@@ -82,6 +89,12 @@ module.exports.createListing=async(req,res,next)=>{
         let {id}=req.params;
         let listing=await Listing.findByIdAndUpdate(id);
         await Listing.findByIdAndUpdate(id,{...req.body.listing});
+        if(typeof req.file!=="undefined"){
+        let url=req.file.path;
+        let filename=req.file.filename;
+        listing.image={url,filename};
+        await listing.save();
+        }
         req.flash("success","Listing updated!");
         res.redirect(`/listings/${id}`);
     }
