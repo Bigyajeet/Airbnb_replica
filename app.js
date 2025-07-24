@@ -120,7 +120,9 @@ app.use((req,res,next)=>{
 // });
 
 
-
+app.get("/", (req, res) => {
+    res.redirect("/listings"); // Redirects to your actual home page
+});
 
 
 
