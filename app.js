@@ -20,6 +20,7 @@ const passport=require("passport");
 const LocalStrategy=require("passport-local")
 const User=require("./models/user.js");
 const passportLocalMongoose=require("passport-local-mongoose");
+const port = process.env.PORT || 8080;
 
 
 // const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
@@ -102,6 +103,7 @@ app.use((req,res,next)=>{
     res.locals.success=req.flash("success");
     res.locals.error=req.flash("error");
     res.locals.currUser=req.user;
+      
      
     // console.log(res.locals.success)
     next();
@@ -160,6 +162,6 @@ app.use((err,req,res,next)=>{
     
 });
 
-app.listen(8080,()=>{
+app.listen(port,()=>{
     console.log("server is running on port 8080");
 });
